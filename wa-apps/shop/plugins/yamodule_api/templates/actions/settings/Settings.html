@@ -1,0 +1,222 @@
+<style>
+    .tabs_ya a {
+        color: #00aff0;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="{$wa_app_static_url}plugins/yamodule_api/css/main.css">
+<link rel="stylesheet" type="text/css" href="{$wa_app_static_url}plugins/yamodule_api/css/tabs.css">
+
+<div class="tabs_ya">
+    Работая с модулем, вы автоматически соглашаетесь с <a href='https://money.yandex.ru/doc.xml?id=527052'
+                                                          target='_blank'>условиями его использования</a>
+    <br/><br/>
+    <div class="update_errors"></div>
+    <div id="adv-page-loader" class="on" style="display: none;"><span class="opc-spinner"></span></div>
+
+    <input id="moneyorg" type="radio" name="tabs" checked>
+    <label for="moneyorg" title="[`Яндекс.Касса`]">[`Яндекс.Касса`]</label>
+
+    <!--<input id="moneyorg_return" type="radio" name="tabs" checked>-->
+    <!--<label for="moneyorg_return" title="[`Yandex.Касса Возврат`]">[`Яндекс.Касса Управление заказами`]</label>-->
+
+    <input id="yabilling" type="radio" name="tabs" checked>
+    <label for="yabilling" title="[`Яндекс.Платёжка`]">[`Яндекс.Платёжка`]</label>
+
+    <input id="money" type="radio" name="tabs" checked>
+    <label for="money" title="[`Яндекс.Деньги`]">[`Яндекс.Деньги`]</label>
+
+    <input id="metrika" type="radio" name="tabs" checked>
+    <label for="metrika" title="[`Яндекс.Метрика`]">[`Яндекс.Метрика`]</label>
+
+    <input id="market" type="radio" name="tabs" checked>
+    <label for="market" title="[`Яндекс.Маркет`]">[`Яндекс.Маркет`]</label>
+
+    <input id="marketp" type="radio" name="tabs" checked>
+    <label for="marketp" title="[`Заказы в Маркете`]">[`Заказы в Маркете`]</label>
+
+    <section id="money">
+        <div class="p2p_errors"></div>
+        {include file='./p2p.html' inline}
+    </section>
+    <section id="moneyorg">
+        <div class="kassa_errors">
+            {if $ya_kassa_test_mode}
+            <div class="alert alert-info">
+                Вы включили тестовый режим приема платежей. Проверьте, как проходит оплата. <a
+                    href="https://kassa.yandex.ru/">Подробнее</a>
+            </div>
+            {/if}
+        </div>
+        {include file="./kassa.html" inline}
+    </section>
+    <section id="yabilling_view">
+        <div class="yabilling_errors"></div>
+        {include file="./yabilling.html" inline}
+    </section>
+    <section id="metrika">
+        <div class="metrika_errors"></div>
+        {include file="./metrika.html" inline}
+        <div id="iframe_container"></div>
+    </section>
+    <section id="market">
+        <div class="market_errors"></div>
+        {include file="./market.html" inline}
+    </section>
+    <section id="marketp">
+        <div class="pokupki_errors"></div>
+        {include file="./pokupki.html" inline}
+    </section>
+</div>
+<script type="text/javascript" src="{$wa_app_static_url}plugins/yamodule_api/js/jquery.total-storage.js"></script>
+<script type="text/javascript" src="{$wa_app_static_url}plugins/yamodule_api/js/back.js"></script>
+<script type="text/javascript">
+
+</script>
+<style>
+    .field .value input[type="text"] {
+        width: 60% !important;
+    }
+
+</style>
+<script type="text/javascript">
+
+    function showcatall($tree) {
+        $tree.find("ul.tree").each(function () {
+            $(this).slideDown();
+        });
+    }
+
+    function hidecatall($tree) {
+        $tree.find("ul.tree").each(function () {
+            $(this).slideUp();
+        });
+    }
+
+    function checkAllAssociatedCategories($tree) {
+        $tree.find(":input[type=checkbox]").each(function () {
+            $(this).prop("checked", true);
+            $(this).parent().addClass("tree-selected");
+        });
+    }
+
+    function uncheckAllAssociatedCategories($tree) {
+        $tree.find(":input[type=checkbox]").each(function () {
+            $(this).prop("checked", false);
+            $(this).parent().removeClass("tree-selected");
+        });
+    }
+
+    function setValidator(id, regex, qty) {
+        var element = document.getElementById(id);
+        if (qty) {
+            limitText(element, qty);
+        }
+        if (element && regex) {
+            var lastValue = element.value;
+            if (!regex.test(lastValue)) {
+                lastValue = '';
+            }
+            setInterval(function () {
+                var value = element.value;
+                if (value != lastValue) {
+                    if (regex.test(value)) {
+                        lastValue = value;
+                    } else {
+                        element.value = lastValue;
+                    }
+                }
+            }, 10);
+        }
+    }
+
+    function limitText(limitField, limitNum) {
+        if (limitField.value.length > limitNum) {
+            limitField.value = limitField.value.substring(0, limitNum);
+        }
+    }
+
+    function hideTax(val) {
+        if (val == 1) {
+            $('.tax_settings').slideDown();
+        } else {
+            $('.tax_settings').slideUp();
+        }
+    }
+
+    function trCat(open) {
+        if (open == 0) {
+            $('.cat_import').slideDown();
+        } else {
+            $('.cat_import').slideUp();
+        }
+    }
+
+    $(document).ready(function () {
+        setValidator('ya_pokupki_cr', /^[0-9]*$/);
+        setValidator('ya_pokupki_campaign', /^[0-9]*$/);
+        setValidator('ya_market_price', /^[0-9]*$/);
+
+        $('.tree-item-name label').click(function () {
+            $(this).parent().find('input').click();
+        });
+
+        if ($('#ya_market_selected:checked').val() == 1) {
+            trCat(1);
+        } else {
+            trCat(0);
+        }
+
+        if ($('#ya_kassa_send_check:checked').val() == 1) {
+            hideTax(1);
+        } else {
+            hideTax(0);
+        }
+
+        $('#ya_market_selected').live('change', function () {
+            trCat($(this).val());
+        });
+
+        $('#ya_kassa_send_check').live('change', function () {
+            hideTax($(this).val());
+        });
+
+        $('.tree-folder-name input').change(function () {
+            if ($(this).prop("checked")) {
+                $(this).parent().addClass("tree-selected");
+                $(this).parents('.tree-folder').first().find('ul input').prop("checked", true).parent().addClass("tree-selected");
+            } else {
+                $(this).parent().removeClass("tree-selected");
+                $(this).parents('.tree-folder').first().find('ul input').prop("checked", false).parent().removeClass("tree-selected");
+            }
+        });
+
+        $('.tree-toggler').click(function () {
+            $(this).parents('.tree-folder').first().find('ul').slideToggle('slow');
+        });
+
+        $('.tree input').change(function () {
+            if ($(this).prop("checked")) {
+                $(this).parent().addClass("tree-selected");
+            } else {
+                $(this).parent().removeClass("tree-selected");
+            }
+        });
+
+        var market_cat = {$ya_market_categories|json_encode};
+        for (var i in market_cat) {
+            if (market_cat[i]) {
+                $('#categoryBox input[value="' + market_cat[i] + '"]').prop("checked", true).change();
+            }
+        }
+
+        jQuery('.ya-active').click(function (e) {
+            if (e.target.checked) {
+                jQuery('.ya-active').each(function () {
+                    if (this != e.target) {
+                        this.checked = false;
+                    }
+                });
+            }
+        });
+    });
+</script>

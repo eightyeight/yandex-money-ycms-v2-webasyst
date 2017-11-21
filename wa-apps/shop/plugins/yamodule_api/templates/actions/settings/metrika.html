@@ -1,0 +1,99 @@
+<form action="?module=plugins&id=yamodule_api&action=save&mode=metrika" method="post" id="plugins-settings-form">
+	<div class="field">
+		<div class="name">
+			<label for="">[`Активность`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_metrika_active} checked="checked" {/if} id="ya_metrika_active" type="radio" name="ya_metrika_active" class="input" value="1">
+			<label for="ya_metrika_active">[`Включено`]</label><br/>
+			<input{if !$ya_metrika_active} checked="checked" {/if} id="ya_metrika_active" type="radio" name="ya_metrika_active" class="input" value="0">
+			<label for="ya_metrika_active">[`Выключено`]</label><br/>
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_metrika_number">[`Номер счётчика`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_metrika_number" type="text" name="ya_metrika_number" class="input" value="{$ya_metrika_number}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_metrika_appid">[`ID Приложения`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_metrika_appid" type="text" name="ya_metrika_appid" class="input" value="{$ya_metrika_appid}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_metrika_pwapp">[`Пароль приложения`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_metrika_pwapp" type="text" name="ya_metrika_pwapp" class="input" value="{$ya_metrika_pwapp}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_metrika_token">[`Токен OAuth`]</label>
+		</div>
+		<div class="value">
+			<input disabled="disabled" id="ya_metrika_token" type="text" name="ya_metrika_token" class="input" value="{$ya_metrika_token}">
+			<br><a href='https://oauth.yandex.ru/authorize?response_type=code&state=metrika&display=popup&client_id={$ya_metrika_appid}' target='_blank'>[`Получить токен`]</a>
+		</div>
+	</div>
+	
+	<div class="field">
+		<div class="name">
+			<label for="">[`Настройки`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_metrika_ww} checked="checked" {/if} id="ya_metrika_ww" type="checkbox" name="ya_metrika_ww" class="input" value="1">
+			<label for="ya_metrika_ww">[`Вебвизор`]</label><br/>
+			<input{if $ya_metrika_map} checked="checked" {/if} id="ya_metrika_map" type="checkbox" name="ya_metrika_map" class="input" value="1">
+			<label for="ya_metrika_map">[`Карта кликов`]</label><br/>
+			<input{if $ya_metrika_out} checked="checked" {/if} id="ya_metrika_out" type="checkbox" name="ya_metrika_out" class="input" value="1">
+			<label for="ya_metrika_out">[`Внешние ссылки, загрузки файлов и отчёт по кнопке "Поделиться"`]</label><br/>
+			<input{if $ya_metrika_refused} checked="checked" {/if} id="ya_metrika_refused" type="checkbox" name="ya_metrika_refused" class="input" value="1">
+			<label for="ya_metrika_refused">[`Точный показатель отказов`]</label><br/>
+			<input{if $ya_metrika_hash} checked="checked" {/if} id="ya_metrika_hash" type="checkbox" name="ya_metrika_hash" class="input" value="1">
+			<label for="ya_metrika_hash">[`Отслеживание хеша в адресной строке браузера`]</label><br/>
+			<input{if $ya_metrika_informer} checked="checked" {/if} id="ya_metrika_informer" type="checkbox" name="ya_metrika_informer" class="input" value="1">
+			<label for="ya_metrika_informer">[`Вкл\Выкл отображение информера`]</label><br/>
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="">[`Цели`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_metrika_cart} checked="checked" {/if} id="ya_metrika_cart" type="checkbox" name="ya_metrika_cart" class="input" value="1">
+			<label for="ya_metrika_cart">[`Корзина`]</label><br/>
+			<input{if $ya_metrika_order} checked="checked" {/if} id="ya_metrika_order" type="checkbox" name="ya_metrika_order" class="input" value="1">
+			<label for="ya_metrika_order">[`Заказ`]</label><br/>
+		</div>
+	</div>
+	{*<div class="field">
+		<div class="name">
+			<label for="">[`Логирование`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_metrika_log} checked="checked" {/if} id="ya_metrika_log" type="checkbox" name="ya_metrika_log" class="input" value="1">
+		</div>
+	</div>*}
+	<div class="field">
+		<div class="name">
+			<label for="ya_metrika_callback">[`Ссылка для приложения`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_metrika_callback" disabled="disabled" type="text" name="ya_metrika_callback" class="input" value="{$ya_metrika_callback}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="value submit save_data">
+			<input type="submit" class="button green" value="Save">
+			<span id="plugins-settings-form-status" style="display:none"><!-- message placeholder --></span>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,30 @@
+<form id="paymentForm" action="{$formUrl}" method="post" style="padding-bottom: 20px;">
+    <input type="hidden" name="formId" value="{$formId}" />
+    <input type="hidden" name="narrative" value="{$narrative}" />
+    <input type="hidden" name="sum" value="{$amount}" />
+    <input type="hidden" name="quickPayVersion" value="2" />
+
+    <div class="form-group">
+        <label for="ym-fio">ФИО плательщика</label>
+        <input type="text" name="fio" value="{$fio}" id="ym-fio" class="form-control" />
+        <div id="ym-billing-error" style="padding-top: 3px;"></div>
+    </div>
+</form>
+<input id="paymentFormSubmit" type="submit" value="[`Оплатить заказ на сайте Яндекс.Денег`]"/>
+<script type="text/javascript">
+    jQuery('#paymentFormSubmit').click(function () {
+        var field = jQuery('#ym-fio');
+        var parts = field.val().trim().split(/\s+/);
+        if (parts.length != 3) {
+            jQuery('#ym-billing-error').text('[`Укажите свои имя, фамилию и отчество`]');
+            field.parent().addClass('has-warning');
+            field.parent().addClass('has-feedback');
+        } else {
+            field.val(parts.join(' '));
+            field.parent().addClass('has-success');
+            field.parent().addClass('has-feedback');
+            field.parent().removeClass('has-warning');
+            jQuery('#paymentForm')[0].submit();
+        }
+    });
+</script>

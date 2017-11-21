@@ -1,0 +1,138 @@
+<form action="?module=plugins&id=yamodule_api&action=save&mode=pokupki" method="post" id="plugins-settings-form">
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_atoken">[`Авторизационный токен Яндекс.Маркет`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_pokupki_atoken" type="text" name="ya_pokupki_atoken" class="input" value="{$ya_pokupki_atoken}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_ta">[`Тип авторизации`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_pokupki_ta" type="text" name="ya_pokupki_ta" class="input" value="URL" disabled>
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_fd">[`Формат данных`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_pokupki_fd" type="text" name="ya_pokupki_fd" class="input" value="JSON" disabled>
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_url">[`URL партнёрского API Яндекс.Маркет`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_pokupki_url" type="text" name="ya_pokupki_url" class="input" value="{$ya_pokupki_url}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_campaign">[`Номер кампании`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_pokupki_campaign" type="text" name="ya_pokupki_campaign" class="input" value="{$ya_pokupki_campaign}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_appid">[`ID приложения`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_pokupki_appid" type="text" name="ya_pokupki_appid" class="input" value="{$ya_pokupki_appid}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_pwapp">[`Пароль приложения`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_pokupki_pwapp" type="text" name="ya_pokupki_pwapp" class="input" value="{$ya_pokupki_pwapp}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_token">[`Авторизационный токен`]</label>
+		</div>
+		<div class="value">
+			<input disabled="disabled" id="ya_pokupki_token" disabed="disabled" type="text" name="ya_pokupki_token" class="input" value="{$ya_pokupki_token}">
+			<br><a href='https://oauth.yandex.ru/authorize?response_type=code&state=pokupki&display=popup&client_id={$ya_pokupki_appid}' target='_blank'>[`Получить токен для доступа к программе "Заказы на маркете"`]</a>
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_pickup">[`Идентификатор пункта самовывоза`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_pokupki_pickup" type="text" name="ya_pokupki_pickup" class="input" value="{$ya_pokupki_pickup}">
+		</div>
+	</div>
+	
+	<div class="field">
+		<div class="name">
+			<label for="">[`Разрешённые методы оплаты`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_pokupki_yandex} checked="checked" {/if} id="ya_pokupki_yandex" type="checkbox" name="ya_pokupki_yandex" class="input" value="1">
+			<label for="ya_pokupki_yandex">[`Предоплата - Оплата при оформлении (только в России)`]</label><br/>
+			<input{if $ya_pokupki_sprepaid} checked="checked" {/if} id="ya_pokupki_sprepaid" type="checkbox" name="ya_pokupki_sprepaid" class="input" value="1">
+			<label for="ya_pokupki_sprepaid">[`Предоплата - Напрямую магазину (только для Украины)`]</label><br/>
+			<input{if $ya_pokupki_cash} checked="checked" {/if} id="ya_pokupki_cash" type="checkbox" name="ya_pokupki_cash" class="input" value="1">
+			<label for="ya_pokupki_cash">[`Постоплата - Наличный расчёт при получении товара`]</label><br/>
+			<input{if $ya_pokupki_card} checked="checked" {/if} id="ya_pokupki_card" type="checkbox" name="ya_pokupki_card" class="input" value="1">
+			<label for="ya_pokupki_card">[`Постоплата - Оплата банковской картой при получении заказа`]</label><br/>
+		</div>
+	</div>
+	{*<div class="field">
+		<div class="name">
+			<label for="">[`Логирование`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_pokupki_log} checked="checked" {/if} id="ya_pokupki_log" type="checkbox" name="ya_pokupki_log" class="input" value="1">
+		</div>
+	</div>*}
+	{foreach $ya_kassa_methods as $method}
+		{if $method['status'] && $method['available']}
+		<div class="field">
+			<div class="name">
+				<label for="">{$method['name']}</label>
+			</div>
+			<div class="value">
+				<select name="ya_pokupki_carrier[{$method['id']}]">
+					<option {if $ya_pokupki_carrier[{$method['id']}] == 'POST'} selected="selected"{/if} value="POST">[`POST`]</option>
+					<option {if $ya_pokupki_carrier[{$method['id']}] == 'PICKUP'} selected="selected"{/if} value="PICKUP">[`PICKUP`]</option>
+					<option {if $ya_pokupki_carrier[{$method['id']}] == 'DELIVERY'} selected="selected"{/if} value="DELIVERY">[`DELIVERY`]</option>
+				</select>
+				<input id="ya_pokupki_cr" style="width:80px !important; min-width: 80px;" type="text" name="ya_pokupki_rate[{$method['id']}]" class="input" value="{$ya_pokupki_rate[{$method['id']}]}">
+			</div>
+		</div>
+		{/if}
+	{/foreach}
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_callback">[`Ссылка для приложения`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_pokupki_callback" disabled="disabled" type="text" name="ya_pokupki_callback" class="input" value="{$ya_pokupki_callback}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_pokupki_link">[`Ссылка для обращения к вашему магазину`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_pokupki_link" disabled="disabled" type="text" name="ya_pokupki_link" class="input" value="{$ya_pokupki_link}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="value submit save_data">
+			<input type="submit" class="button green" value="Save">
+			<span id="plugins-settings-form-status" style="display:none"><!-- message placeholder --></span>
+		</div>
+	</div>
+</form>

@@ -1,0 +1,170 @@
+<form action="?module=plugins&id=yamodule_api&action=save&mode=market" method="post" id="plugins-settings-form">
+	<div class="field">
+		<div class="name">
+			<label for="">[`Упрощённый yml`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_market_simpleyml} checked="checked" {/if} id="ya_market_simpleyml" type="radio" name="ya_market_simpleyml" class="input" value="1">
+			<label for="ya_market_simpleyml">[`Включено`]</label><br/>
+			<input{if !$ya_market_simpleyml} checked="checked" {/if} id="ya_market_simpleyml" type="radio" name="ya_market_simpleyml" class="input" value="0">
+			<label for="ya_market_simpleyml">[`Выключено`]</label><br/>
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="">[`Выгружать`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_market_selected} checked="checked" {/if} id="ya_market_selected" type="radio" name="ya_market_selected" class="input" value="1">
+			<label for="ya_market_selected">[`Все категории`]</label><br/>
+			<input{if !$ya_market_selected} checked="checked" {/if} id="ya_market_selected" type="radio" name="ya_market_selected" class="input" value="0">
+			<label for="ya_market_selected">[`выбранные`]</label><br/>
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="">[`Доступность`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_market_set_available == 1} checked="checked" {/if} id="ya_market_set_available" type="radio" name="ya_market_set_available" class="input" value="1">
+			<label for="ya_market_set_available">[`Все доступны`]</label><br/>
+			<input{if $ya_market_set_available == 2} checked="checked" {/if} id="ya_market_set_available" type="radio" name="ya_market_set_available" class="input" value="2">
+			<label for="ya_market_set_available">[`Доступны если > 0, остальные на заказ`]</label><br/>
+			<input{if $ya_market_set_available == 3} checked="checked" {/if} id="ya_market_set_available" type="radio" name="ya_market_set_available" class="input" value="3">
+			<label for="ya_market_set_available">[`Если = 0, не выгружать`]</label><br/>
+			<input{if $ya_market_set_available == 4} checked="checked" {/if} id="ya_market_set_available" type="radio" name="ya_market_set_available" class="input" value="4">
+			<label for="ya_market_set_available">[`Всё на заказ`]</label><br/>
+			
+		</div>
+	</div>
+	
+	<div class="field">
+		<div class="name">
+			<label for="ya_market_name">[`Назвагие магазина`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_market_name" maxlength="20" type="text" name="ya_market_name" class="input" value="{$ya_market_name}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_market_price">[`Стоимость доставки в домашнем регионе`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_market_price" type="text" name="ya_market_price" class="input" value="{$ya_market_price}">
+		</div>
+	</div>
+	<div class="field cat_import" style="display:none;">
+		<div class="name">
+			<label for="ya_market_price">[`Категории для Импорта`]</label>
+		</div>
+		<div class="value">
+			<div class="panel panel-default">
+				<div class="tree-panel-heading tree-panel-heading-controls clearfix">
+					<div class="tree-actions pull-right">
+						<a onclick="hidecatall($('#categoryBox')); return false;" id="collapse-all-categoryBox" class="btn btn-default">
+							<i class="icon-collapse-alt"></i>[`Свернуть все`]
+						</a>
+						<a onclick="showcatall($('#categoryBox')); return false;" id="expand-all-categoryBox" class="btn btn-default">
+							<i class="icon-expand-alt"></i>[`Показать все`]
+						</a>
+						<a onclick="checkAllAssociatedCategories($('#categoryBox')); return false;" id="check-all-categoryBox" class="btn btn-default">
+							<i class="icon-check-sign"></i>[`Отметить всё`]
+						</a>
+						<a onclick="uncheckAllAssociatedCategories($('#categoryBox')); return false;" id="uncheck-all-categoryBox" class="btn btn-default">
+							<i class="icon-check-empty"></i>[`Снять отметки`]
+						</a>
+					</div>
+				</div>	
+				<ul id="categoryBox" class="tree">
+					{$treeCat}
+				</ul>
+			</div>
+		</div>
+	</div>
+	
+	<div class="field">
+		<div class="name">
+			<label for="ya_market_price">[`Валюта прайс-листа`]</label>
+		</div>
+		<div class="value">
+			<select name="ya_market_currency">
+				{foreach $ya_currencies as $cc}
+					<option {if $ya_market_currency == $cc['code']} selected="selected" {/if} value="{$cc['code']}">{$cc['code']}</option>
+				{/foreach}
+			</select>
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label for="ya_market_price">[`Значение поля "VENDOR(Производитель)"`]</label>
+		</div>
+		<div class="value">
+			<select name="ya_market_vendor">
+				{foreach $ya_features as $ff}
+					<option {if $ya_market_vendor == $ff['code']} selected="selected" {/if} value="{$ff['code']}">{$ff['name']}</option>
+				{/foreach}
+			</select>
+		</div>
+	</div>
+	<!-- <div class="field">
+		<div class="value">
+			<a class="add_field small"><i class="icon10 add"></i> [`Добавить новое поле &lt;param&gt;`]</a>
+		</div>
+	</div> -->
+	<div class="field">
+		<div class="name">
+			<label for="">[`Настройки`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_market_available} checked="checked" {/if} id="ya_market_available" type="checkbox" name="ya_market_available" class="input" value="1">
+			<label for="ya_market_available">[`Экспортировать только товары которые есть в наличии`]</label><br/>
+			<input{if $ya_market_comb} checked="checked" {/if} id="ya_market_comb" type="checkbox" name="ya_market_comb" class="input" value="1">
+			<label for="ya_market_comb">[`Экспорт комбинаций товара`]</label><br/>
+			<input{if $ya_market_fea} checked="checked" {/if} id="ya_market_fea" type="checkbox" name="ya_market_fea" class="input" value="1">
+			<label for="ya_market_fea">[`Экспорт свойств товара`]</label><br/>
+			<input{if $ya_market_dm} checked="checked" {/if} id="ya_market_dm" type="checkbox" name="ya_market_dm" class="input" value="1">
+			<!-- <label for="ya_market_dm">[`Отображать размеры товара (dimensions)`]</label><br/>
+			<input{if $ya_market_currencies} checked="checked" {/if} id="ya_market_currencies" type="checkbox" name="ya_market_currencies" class="input" value="1"> -->
+			<label for="ya_market_currencies">[`Выгружать все валюты? (Если нет, выгрузится только поумолчанию)`]</label><br/>
+			<input{if $ya_market_store} checked="checked" {/if} id="ya_market_store" type="checkbox" name="ya_market_store" class="input" value="1">
+			<label for="ya_market_store">[`Возможность купить в розничном магазине.`]</label><br/>
+			<input{if $ya_market_delivery} checked="checked" {/if} id="ya_market_delivery" type="checkbox" name="ya_market_delivery" class="input" value="1">
+			<label for="ya_market_delivery">[`Возможность доставки соответствующего товара.`]</label><br/>
+			<input{if $ya_market_pickup} checked="checked" {/if} id="ya_market_pickup" type="checkbox" name="ya_market_pickup" class="input" value="1">
+			<label for="ya_market_pickup">[`Возможность зарезервировать и забрать самостоятельно.`]</label><br/>
+			
+		</div>
+	</div>
+	{*<div class="field">
+		<div class="name">
+			<label for="">[`Логирование`]</label>
+		</div>
+		<div class="value">
+			<input{if $ya_market_log} checked="checked" {/if} id="ya_market_log" type="checkbox" name="ya_market_log" class="input" value="1">
+		</div>
+	</div>*}
+	<div class="field">
+		<div class="name">
+			<label for="ya_market_yml">[`Ссылка на динамический yml`]</label>
+		</div>
+		<div class="value">
+			<input id="ya_market_yml" disabled="disabled" type="text" name="ya_market_yml" class="input" value="{$ya_market_yml}">
+		</div>
+	</div>
+	<div class="field">
+		<div class="name">
+			<label></label>
+		</div>
+		<div class="value">
+			<p class="hint" style="margin-bottom:0px;"><br><i class="icon10 exclamation"></i> [`Если товар не принадлежит ни одной категории, то он не будет экспортирован в YML-файл.`]</p>
+			<p class="hint" style="margin-bottom:0px;"><i class="icon10 exclamation"></i> [`Если товар имеет цену, менее чем 0.5, то он не будет экспортирован в YML-файл.`]</p>
+		</div>
+	</div>
+	<div class="field">
+		<div class="value submit save_data">
+			<input type="submit" class="button green" value="Save">
+			<span id="plugins-settings-form-status" style="display:none"><!-- message placeholder --></span>
+		</div>
+	</div>
+</form>

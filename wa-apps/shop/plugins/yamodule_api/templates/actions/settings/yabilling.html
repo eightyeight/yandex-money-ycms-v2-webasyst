@@ -1,0 +1,57 @@
+<form action="?module=plugins&id=yamodule_api&action=save&mode=yabilling" method="post" id="plugins-settings-form">
+    <div class="field">
+        <div class="name">
+
+        </div>
+        <div class="value">
+            Это платежная форма на ваш сайт. Позволяет принимать платежи на счет компании — с карт или из кошельков
+            Яндекс.Денег, без договора. Для настройки нужен ID формы: он придёт в письме, когда вы
+            <a href="https://money.yandex.ru/fastpay/">соберете форму в конструкторе</a>.
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for=""></label>
+        </div>
+        <div class="value">
+            <input {if $ya_billing_active} checked="checked" {/if} id="ya_billing_active" type="checkbox" name="ya_billing_active" class="input ya-active" value="1">
+            <label for="ya_billing_active">[`Включить прием платежей через Платежку`]</label><br />
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for="ya_billing_id">[`ID формы`]</label>
+        </div>
+        <div class="value">
+            <input id="ya_billing_id" type="text" name="ya_billing_id" class="input" value="{$ya_billing_id}">
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for="ya_billing_purpose">[`Назначение платежа`]</label>
+        </div>
+        <div class="value">
+            <input id="ya_billing_purpose" type="text" name="ya_billing_purpose" class="input" value="{$ya_billing_purpose}">
+            <br /><span class="help-block">[`Назначение будет в платежном поручении: напишите в нем всё, что поможет отличить заказ, который оплатили через Платежку`]</span>
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for="ya_billing_status">[`Статус заказа`]</label>
+        </div>
+        <div class="value">
+            <select id="ya_billing_status" class="input" name="ya_billing_status">
+                {foreach item=state from=$ya_billing_statuses}
+                <option value="{$state->id}" {if $state->id == $ya_billing_status} selected{/if} >{$state->name}</option>
+                {/foreach}
+            </select>
+            <br /><span class="help-block">[`Статус должен показать, что результат платежа неизвестен: заплатил клиент или нет, вы можете узнать только из уведомления на электронной почте или в своем банке`]</span>
+        </div>
+    </div>
+    <div class="field">
+        <div class="value submit save_data">
+            <input type="submit" class="button green" value="Save">
+            <span id="plugins-settings-form-status" style="display:none"><!-- message placeholder --></span>
+        </div>
+    </div>
+</form>

@@ -1,0 +1,76 @@
+<form action="?module=plugins&id=yamodule_api&action=save&mode=p2p" method="post" id="plugins-settings-form">
+    <div class="field">
+        <div class="name">
+
+        </div>
+        <div class="value">
+            [`Для работы с модулем нужно <a href='https://money.yandex.ru/new' target='_blank'>открыть кошелек</a> на Яндексе и <a href='https://sp-money.yandex.ru/myservices/new.xml' target='_blank'>зарегистрировать приложение</a> на сайте Яндекс.Денег`]
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for=""></label>
+        </div>
+        <div class="value">
+            <input {if $ya_p2p_active} checked="checked" {/if} id="ya_p2p_active" type="checkbox" name="ya_p2p_active" class="input ya-active" value="1">
+            <label for="ya_p2p_active">[`Включить прием платежей в кошелек на Яндексе`]</label><br/>
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for="ya_p2p_callback">[`RedirectURL`]</label>
+        </div>
+        <div class="value">
+            <input id="ya_p2p_callback" disabled="disabled" type="text" name="ya_p2p_callback" class="input" value="{$ya_p2p_callback}">
+            <br><span class="help-block">[`Скопируйте эту ссылку в поле Redirect URL на <a href='https://sp-money.yandex.ru/myservices/new.xml' target='_blank'>странице регистрации приложения</a>`]</span>
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for="ya_p2p_number">[`Номер кошелька`]</label>
+        </div>
+        <div class="value">
+            <input id="ya_p2p_number" type="text" name="ya_p2p_number" class="input" value="{$ya_p2p_number}">
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for="ya_p2p_appid">[`Id приложения`]</label>
+        </div>
+        <div class="value">
+            <input id="ya_p2p_appid" type="text" name="ya_p2p_appid" class="input" value="{$ya_p2p_appid}">
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for="ya_p2p_skey">[`Секретное слово`]</label>
+        </div>
+        <div class="value">
+            <textarea id="ya_p2p_skey" name="ya_p2p_skey" class="input" value="">{$ya_p2p_skey}</textarea>
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for=""></label>
+        </div>
+        <div class="value">
+            [`ID и секретное слово вы получите после <a href='https://sp-money.yandex.ru/myservices/online.xml' target='_blank'>регистрации приложения</a> на сайте Яндекс.Денег`]
+        </div>
+    </div>
+    <div class="field">
+        <div class="name">
+            <label for="">[`Запись отладочной информации`]</label>
+        </div>
+        <div class="value">
+            <input{if $ya_p2p_log} checked="checked" {/if} id="ya_p2p_log" type="checkbox" name="ya_p2p_log" class="input" value="1">
+            <br><span class="help-block">[`Настройку нужно будет поменять, только если попросят специалисты Яндекс.Денег`]</span>
+        </div>
+    </div>
+
+    <div class="field">
+        <div class="value submit save_data">
+            <input type="submit" class="button green" value="Save">
+            <span id="plugins-settings-form-status" style="display:none"><!-- message placeholder --></span>
+        </div>
+    </div>
+</form>

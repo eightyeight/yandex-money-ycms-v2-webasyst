@@ -1,0 +1,291 @@
+{if $show_return_tab}
+<link rel="stylesheet" type="text/css" href="{$wa_app_static_url}plugins/yamodule_api/css/tabs.css">
+<div class="tabs_ya bootstrap tabs_ya_order">
+    <div id="adv-page-loader" class="on" style="display: none;"><span class="opc-spinner"></span></div>
+    <input id="return" type="radio" name="tabs" checked>
+    <label for="return" title="[`Возврат`]">[`Возврат`]</label>
+
+    <input id="list_return" type="radio" name="tabs">
+    <label for="list_return" title="[`Список возвратов`]">[`История`]</label>
+
+    <section id="return">
+        {if $total - $return_total == 0}
+        <p class="alert alert-success success_return_{$id_order}">[`Платеж успешно возвращен`]</p>
+        {else}
+            <div id="rerrors">
+                {if isset($return_errors)}
+                {foreach $return_errors as $ke}
+                <p class='alert alert-danger'>{$ke}</p>
+                {/foreach}
+                {/if}
+            </div>
+            {if !isset($return_errors) || !$return_errors|count}
+            <form class="form-horizontal" method='post' action="">
+                <table class="table table-bordered">
+                    {if $pym}
+                        <tr>
+                            <td>[`Номер транзакции (Яндекс.Касса)`]</td>
+                            <td>{$invoiceId}</td>
+                        </tr>
+                        <tr>
+                            <td>[`Номер заказа`]</td>
+                            <td>{$id_order}</td>
+                        </tr>
+                        <tr>
+                            <td>[`Способ оплаты`]</td>
+                            <td>Яндекс.Касса ({$payment_method})</td>
+                        </tr>
+                        <tr>
+                            <td>[`Сумма платежа`]</td>
+                            <td>{shop_currency_html($total)}</td>
+                        </tr>
+                        <tr>
+                            <td>[`Возвращено`]</td>
+                            <td>{shop_currency_html($return_total)}</td>
+                        </tr>
+                        {if $products|count < 1 && $ya_kassa_send_check}
+                        {$products|count}
+                        {else}
+                        <tr>
+                            <td>[`Сумма возврата`]</td>
+                            <td style="width: 350px;">
+                                <div class="input-group">
+                                    <span class="input-group-addon"> руб </span>
+                                    {if $ya_kassa_send_check}
+                                    <input type="text" name="return_sum_front" disabled
+                                           class='control-form return_sum return_disabled' value="{$total - $return_total}"
+                                           id="return_sum"/>
+                                    <input type="hidden" name="return_sum" class='control-form return_sum return_hidden'
+                                           value="{$total - $return_total}" id="return_sum"/>
+                                    {else}
+                                    <input type="text" name="return_sum" class='control-form return_sum'
+                                           value="{$total - $return_total}" id="return_sum"/>
+                                    {/if}
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>[`Причина возврата`]</td>
+                            <td><textarea class='control-form' name='return_cause'></textarea></td>
+                        </tr>
+                        <!--{if $ya_kassa_send_check}
+                        <tr>
+                            <td></td>
+                            <td>
+                                <label><input checked type="radio" name="fullreturn" value="1" style="margin-left: 10px;"/>
+                                    Полный возврат</label>
+                                <label><input {if $products|count < 1} disabled {/if} type="radio" name="fullreturn" value="0"
+                                    style="margin-left: 10px;"/> Частичный возврат</label>
+                            </td>
+                        </tr>
+                        <tr class="product-list" style="display: none;">
+                            <td colspan="2">
+                                <label>Товары, которые будут удалены из чека</label>
+                                <script>
+                                    $(document).ready(function () {
+                                        updPrice();
+
+                                        $('input[name="fullreturn"]').on('change', function () {
+                                            var value = $('input[name="fullreturn"]:checked').val();
+                                            if (value == 1) {
+                                                $('.product-list').hide();
+                                            } else {
+                                                $('.product-list').show();
+                                            }
+
+                                            updPrice();
+                                        });
+                                        $('input[name="fullreturn"]').trigger('change');
+
+                                        $('.removeProduct').click(function (e) {
+                                            $(this).parent().parent().remove();
+                                            updPrice();
+                                        });
+
+                                        $('.qty_change').click(function (e) {
+                                            e.preventDefault();
+                                            var value = parseInt($(this).parent().find('input.nshow').first().val());
+                                            var min = parseInt($(this).attr('min'));
+                                            var max = parseInt($(this).attr('max'));
+
+                                            if ($(this).hasClass('up')) {
+                                                value++;
+                                            }
+
+                                            if ($(this).hasClass('down')) {
+                                                value&#45;&#45;;
+                                            }
+
+                                            if (value < min) {
+                                                return false;
+                                            }
+                                            if (value > max) {
+                                                return false;
+                                            }
+
+                                            $(this).parent().find('input').val(value);
+                                            updPrice();
+                                            return false;
+                                        });
+
+                                        function updPrice() {
+                                            var sum = 0;
+                                            $('.summa').each(function () {
+                                                var qty = parseFloat($(this).parent().parent().find('input.nshow').val());
+                                                var val = parseFloat($(this).val());
+                                                sum += parseFloat($(this).val()) * qty;
+                                            });
+                                            $('.return_sum').val(sum.toFixed(2));
+                                        }
+                                    });
+                                </script>
+                                <input type="hidden" class="email" value="{$id_order}" name="id_order"/>
+                                <table style="width:100%;" class="list">
+                                    <tbody>
+                                    {foreach $products as $id => $product}
+                                    <tr>
+                                        <td>{$product['name']}</td>
+                                        <td>
+                                            <div style="display: flex;">
+                                                <button class="qty_change down" max="{$product['quantity']}" min="0"> -</button>
+                                                <input class="show" disabled style="text-align: center;width:60px;" type="text"
+                                                       value="{$product['quantity']}"/>
+                                                <input class="nshow" type="hidden" value="{$product['quantity']}"
+                                                       name="items[{$id}]['quantity']"/>
+                                                <button class="qty_change up" max="{$product['quantity']}" min="0"> +</button>
+                                            </div>
+                                        </td>
+                                        <td>
+                                            <a class="removeProduct" style="text-decoration: underline; cursor: pointer;">Оставить
+                                                в чеке</a>
+                                            <input type="hidden" class="summa"
+                                                   value="{$product['amount']['value']}"
+                                                   name="items[{$id}]['amount']['value']"/>
+                                            <input type="hidden" class="currency"
+                                                   value="{$product['amount']['currency']}"
+                                                   name="items[{$id}]['amount']['currency']"/>
+                                            <input type="hidden" class="vat_code"
+                                                   value="{$product['vat_code']}"
+                                                   name="items[{$id}]['vat_code']"/>
+                                            <input type="hidden" class="description"
+                                                   value="{$product['description']}"
+                                                   name="items[{$id}]['description']"/>
+                                            <input type="hidden" class="id"
+                                                   value="{$product['id']}"
+                                                   name="items[{$id}]['id']"/>
+                                        </td>
+                                    </tr>
+                                    {/foreach}
+                                    </tbody>
+                                </table>
+                            </td>
+                        </tr>-->
+                        {/if}
+                        <tr>
+                            <td colspan='2'>
+                                <button type='button' class='submit_return_button btn btn-success'>[`Сделать возврат`]</button>
+                            </td>
+                        </tr>
+                    {/if}
+                    {else}
+                    <tr>
+                        <td colspan='3'>
+                            <div class='alert alert-danger'>[`Информация по платежу отсутствует.`]
+                            </div>
+                        </td>
+                    </tr>
+                    {/if}
+                </table>
+            </form>
+            {/if}
+        {/if}
+    </section>
+    <section id="list_return">
+        <h4>[`Список возвратов`]</h4>
+        <form class="form-horizontal">
+            <div class="form-group">
+                <div class="col-lg-12">
+                    <table class='table table-bordered'>
+                        <tr>
+                            <td>[`Дата возврата`]</td>
+                            <td>[`Сумма возврата`]</td>
+                            <td>[`Причина возврата`]</td>
+                        </tr>
+                        {if $return_items}
+                        {foreach $return_items as $ret}
+                        <tr>
+                            <td>{$ret['date']}</td>
+                            <td>{shop_currency_html($ret['amount'])}</td>
+                            <td>{$ret['cause']}</td>
+                        </tr>
+                        {/foreach}
+                        {else}
+                        <tr>
+                            <td colspan='3'>
+                                <div class='alert alert-danger'>[`Успешные возвраты по данному платежу отсутствуют`]
+                                </div>
+                            </td>
+                        </tr>
+                        {/if}
+                    </table>
+                </div>
+            </div>
+        </form>
+    </section>
+</div>
+<script type="text/javascript">
+    function strpos(haystack, needle, offset) {
+        var i = haystack.indexOf(needle, offset);
+        return i >= 0 ? i : false;
+    }
+
+    $(document).ready(function () {
+        var step = new Array();
+        var total = 0;
+
+        if (strpos(location.href, 'success_return')) {
+            $('#return').click();
+            $('.success_return_{$id_order}').show();
+        }
+
+        $('.submit_return_button').on('click', function (e) {
+            e.preventDefault();
+            $.ajax({
+                url: '?module=plugins&id=yamodule_api&action=save&mode=make_return',
+                type: 'post',
+                dataType: 'json',
+                data: $('.submit_return_button').parents('form').first().serialize() + '&id_order={$id_order}',
+                cache: false,
+                contentType: false,
+                processData: false,
+                beforeSend: function () {
+                    //$('#mws_crt_load').button('loading');
+                    $('#rerrors').empty();
+                },
+                complete: function () {
+                    //$('#mws_crt_load').button('reset');
+                },
+                success: function (json) {
+                    if (!json.data.errors) {
+                        location.href = location.href + 'success_return/';
+                        location.reload();
+                    } else {
+                        for (i in json.data.errors) {
+                            $('#rerrors').append("<div class='alert alert-danger'>" + json.data.errors[i] + "</div>");
+                        }
+                    }
+                },
+                error: function (xhr, ajaxOptions, thrownError) {
+                    alert(thrownError + "\r\n" + xhr.statusText + "\r\n" + xhr.responseText);
+                }
+            });
+        });
+    })
+</script>
+
+<style>
+    table.list td {
+        padding: 5px;
+    }
+</style>
+{/if}
