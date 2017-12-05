@@ -48,7 +48,7 @@ class yamodulepay_apiPayment extends waPayment implements waIPayment
     const ORDER_STATE_PROCESS = 'process';
 
 
-    private $version = '1.3.2';
+    private $version = '1.0.1';
     private $order_id;
     private $request;
 
@@ -151,10 +151,10 @@ class yamodulepay_apiPayment extends waPayment implements waIPayment
                     );
 
                     $transactionModel = new waTransactionModel();
-                    $transaction = $this->getTransactionByOrder($transactionModel, $order_data);
+                    $transaction      = $this->getTransactionByOrder($transactionModel, $order_data);
 
-                    if($transaction) {
-                        if($transactionModel->updateById($transaction['id'], $data)){
+                    if ($transaction) {
+                        if ($transactionModel->updateById($transaction['id'], $data)) {
                             wa()->getResponse()->redirect($result->confirmation->confirmationUrl);
                         }
                     } else {
@@ -169,6 +169,7 @@ class yamodulepay_apiPayment extends waPayment implements waIPayment
                         $view->assign('errors', $this->errors);
                     }
                     $this->assignKassaVariables($order_data, $data, $yclass, $view);
+
                     return $view->fetch($this->path.'/templates/payment.html');
                 }
             } else {
@@ -757,7 +758,11 @@ class yamodulepay_apiPayment extends waPayment implements waIPayment
                                                  'type'      => $confirmationType,
                                                  'returnUrl' => $returnUrl,
                                              )
-                                         );
+                                         )
+                                         ->setMetadata(array(
+                                             'cms_name'       => 'ya_api_webasyst',
+                                             'module_version' => $this->version,
+                                         ));
 
         if (isset($data['ya_kassa_send_check']) && $data['ya_kassa_send_check']) {
             $taxValues   = array();
@@ -812,7 +817,8 @@ class yamodulepay_apiPayment extends waPayment implements waIPayment
                 $receipt->normalize($paymentRequest->getAmount());
             }
         } catch (Exception $e) {
-            $this->debugLog('Payment request build error: '. $e->getMessage());
+            $this->debugLog('Payment request build error: '.$e->getMessage());
+
             return null;
         }
 

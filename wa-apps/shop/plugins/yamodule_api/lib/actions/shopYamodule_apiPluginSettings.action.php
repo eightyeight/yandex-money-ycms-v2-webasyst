@@ -95,6 +95,8 @@ class shopYamodule_apiPluginSettingsAction extends waViewAction
             }
         }
 
+        $root = str_replace('http://', 'https://', wa()->getRootUrl(true));
+
         $this->view->assign('ya_kassa_test_mode', $this->isTestMode($settings));
         $this->view->assign('ya_features', $ya_features);
         $this->view->assign('ya_kassa_methods', $methods);
@@ -103,14 +105,8 @@ class shopYamodule_apiPluginSettingsAction extends waViewAction
         $this->view->assign('ya_kassa_fail', $this->getRelayUrl().'?result=fail');
         $this->view->assign('ya_kassa_success', $this->getRelayUrl().'?result=success');
         $this->view->assign('ya_p2p_callback', $this->getRelayUrl(true));
-        $this->view->assign(
-            'ya_pokupki_callback',
-            wa()->getRootUrl(true).'webasyst/shop/?action=plugins#/yamodule_api/'
-        );
-        $this->view->assign(
-            'ya_metrika_callback',
-            wa()->getRootUrl(true).'webasyst/shop/?action=plugins#/yamodule_api/'
-        );
+        $this->view->assign('ya_pokupki_callback', $root . 'webasyst/shop/?action=plugins#/yamodule_api/');
+        $this->view->assign('ya_metrika_callback', $root . 'webasyst/shop/?action=plugins#/yamodule_api/');
         $this->view->assign(
             'ya_market_yml',
             wa()->getRouteUrl('shop/frontend', array('module' => 'yamodule_api', 'action' => 'market'), true)
